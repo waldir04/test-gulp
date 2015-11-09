@@ -1,0 +1,23 @@
+{
+  "name": "test-sass",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "waldir"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/waldir04/test-sass-gulp",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4"
+  }
+}
