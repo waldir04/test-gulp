@@ -6,6 +6,10 @@ var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
 var useref = require('gulp-useref');
 var sourcemaps = require('gulp-sourcemaps');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
+var rev = require('gulp-rev');
+var revReplace = require('gulp-rev-replace');
 
 gulp.task('connect', function() {
 	connect.server({
@@ -15,17 +19,27 @@ gulp.task('connect', function() {
 });
 
 gulp.task('vendor:build', function () {
-    var assets = useref.assets();
- 
-    return gulp.src('app/*.html')
-        .pipe(assets)
-        .pipe(sourcemaps.init())
-        .pipe(gulpif('*.js', uglify()))
-        .pipe(gulpif('*.css', minifyCss()))
-        .pipe(assets.restore())
-        .pipe(useref())
-        .pipe(gulpif('*.css', sourcemaps.write()))
-        .pipe(gulp.dest('dist'));
+	var assets = useref.assets();
+
+	gulp.src('app/assets/img/*')
+	.pipe(imagemin({
+		progressive: true,
+		svgoPlugins: [{removeViewBox: false}],
+		use: [pngquant()]
+	}))
+	.pipe(gulp.dest('dist/assets/img'));
+
+	return gulp.src('app/*.html')
+	.pipe(assets)
+	.pipe(sourcemaps.init())
+	.pipe(gulpif('*.js', uglify()))
+	.pipe(gulpif('*.css', minifyCss()))
+	.pipe(rev())
+	.pipe(assets.restore())
+	.pipe(useref())
+	.pipe(revReplace()) 
+	.pipe(gulpif('*.css', sourcemaps.write()))
+	.pipe(gulp.dest('dist'));
 });
 
 gulp.task('styles', function() {
